@@ -89,7 +89,7 @@ namespace SwitchSMAPI.Framework.Translation {
         private sealed class TranslationImpl : Translation {
             private static readonly Regex TokenPattern = new Regex(@"\{\{([^}]+)\}\}", RegexOptions.Compiled);
 
-            public string Key { get; }
+            public override string Key { get; }
             private readonly string  _raw;
             private readonly object? _tokens;
 
@@ -99,7 +99,7 @@ namespace SwitchSMAPI.Framework.Translation {
                 _tokens = tokens;
             }
 
-            public Translation Tokens(object? tokens) => new TranslationImpl(Key, _raw, tokens);
+            public override Translation Tokens(object? tokens) => new TranslationImpl(Key, _raw, tokens);
 
             public override string ToString() {
                 if (_tokens == null) return _raw;
@@ -114,7 +114,6 @@ namespace SwitchSMAPI.Framework.Translation {
                 });
             }
 
-            public static implicit operator string(TranslationImpl t) => t.ToString();
         }
     }
 }
