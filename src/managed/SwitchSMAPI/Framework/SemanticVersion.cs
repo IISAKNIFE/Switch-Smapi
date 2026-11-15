@@ -96,7 +96,15 @@ namespace SwitchSMAPI.Framework {
         public override bool Equals(object? obj) =>
             obj is ISemanticVersion other && CompareTo(other) == 0;
 
-        public override int GetHashCode() =>
-            HashCode.Combine(MajorVersion, MinorVersion, PatchVersion, PrereleaseTag);
+        public override int GetHashCode() {
+            unchecked {
+                int h = 17;
+                h = h * 31 + MajorVersion;
+                h = h * 31 + MinorVersion;
+                h = h * 31 + PatchVersion;
+                h = h * 31 + (PrereleaseTag?.GetHashCode() ?? 0);
+                return h;
+            }
+        }
     }
 }
