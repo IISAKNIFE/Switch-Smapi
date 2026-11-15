@@ -48,7 +48,7 @@ namespace SwitchSMAPI.Framework.Translation {
                 // Try language-only fallback (e.g. "zh" for "zh-CN")
                 int dash = locale.IndexOf('-');
                 if (dash > 0) {
-                    LoadFile(Path.Combine(i18nDir, $"{locale[..dash]}.json"));
+                    LoadFile(Path.Combine(i18nDir, $"{locale.Substring(0, dash)}.json"));
                 }
             }
 
