@@ -15,6 +15,9 @@
     <Description>Stardew Valley Modding API port for Nintendo Switch (Atmosphere CFW)</Description>
     <Authors>Switch-SMAPI Contributors</Authors>
     <Copyright>Copyright (c) 2024 Switch-SMAPI Contributors</Copyright>
+    <!-- Copy NuGet dependencies (Newtonsoft.Json, Microsoft.CSharp) next to SwitchSMAPI.dll
+         so tools/package_mod.py can find them. -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,5 +49,18 @@
       <Private>false</Private>
     </Reference>
   </ItemGroup>
+
+  <!-- A netstandard2.0 build only sees Harmony's reference assembly, so copy the real
+       runtime 0Harmony.dll (a .NET Framework build, which Mono can load) from the package. -->
+  <Target Name="CopyHarmonyRuntime" AfterTargets="Build">
+    <PropertyGroup>
+      <_HarmonyLibDir>$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))lib.harmony/2.3.3/lib/</_HarmonyLibDir>
+      <_HarmonyDll Condition="Exists('$(_HarmonyLibDir)net472/0Harmony.dll')">$(_HarmonyLibDir)net472/0Harmony.dll</_HarmonyDll>
+      <_HarmonyDll Condition="'$(_HarmonyDll)' == '' And Exists('$(_HarmonyLibDir)net48/0Harmony.dll')">$(_HarmonyLibDir)net48/0Harmony.dll</_HarmonyDll>
+      <_HarmonyDll Condition="'$(_HarmonyDll)' == '' And Exists('$(_HarmonyLibDir)net452/0Harmony.dll')">$(_HarmonyLibDir)net452/0Harmony.dll</_HarmonyDll>
+    </PropertyGroup>
+    <Copy Condition="'$(_HarmonyDll)' != ''" SourceFiles="$(_HarmonyDll)" DestinationFolder="$(OutDir)" />
+    <Warning Condition="'$(_HarmonyDll)' == ''" Text="Could not find a runtime 0Harmony.dll under $(_HarmonyLibDir)" />
+  </Target>
 
 </Project>
