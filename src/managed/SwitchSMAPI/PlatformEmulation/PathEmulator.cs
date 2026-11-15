@@ -18,12 +18,12 @@ namespace SwitchSMAPI.PlatformEmulation {
             if (string.IsNullOrEmpty(path)) return path;
 
             if (path.Length >= 3 && char.IsLetter(path[0]) && path[1] == ':') {
-                string rest = path[2..].Replace('\\', '/').TrimStart('/');
+                string rest = path.Substring(2).Replace('\\', '/').TrimStart('/');
                 return SdRoot + "/Windows/" + rest;
             }
 
             if (path.StartsWith(@"\\", StringComparison.Ordinal)) {
-                string rest = path[2..].Replace('\\', '/');
+                string rest = path.Substring(2).Replace('\\', '/');
                 return SdRoot + "/UNC/" + rest;
             }
 
