@@ -21,6 +21,9 @@ endif
 
 include $(DEVKITPRO)/libnx/switch_rules
 
+# Fallback in case switch_rules does not define the tool variable
+ELF2NSO ?= elf2nso
+
 #---------------------------------------------------------------------------------
 # Target configuration
 #---------------------------------------------------------------------------------
@@ -83,7 +86,8 @@ $(OUTPUT)/$(TARGET).nso: $(OUTPUT)/$(TARGET).elf
 	@echo "  ELF2NSO  $<"
 	$(ELF2NSO) $< $@
 
-$(OUTPUT)/$(TARGET).elf: $(OFILES)
+# order-only: output/ must exist before linking (the map file lives there), even with make -j
+$(OUTPUT)/$(TARGET).elf: $(OFILES) | output_dir
 	@echo "  LD       $@"
 	$(CXX) $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $@
 
