@@ -26,7 +26,7 @@
   <!-- CI / no-dump fallback: compile-only MonoGame reference so Microsoft.Xna.* types resolve.
        Never shipped; at runtime the game's own MonoGame.Framework.dll is used. -->
   <ItemGroup Condition="'$(StardewSwitchDump)' == ''">
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303"
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641"
                       PrivateAssets="all" ExcludeAssets="runtime;native" />
   </ItemGroup>
 
