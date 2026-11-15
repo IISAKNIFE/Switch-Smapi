@@ -34,7 +34,7 @@ SOURCES     := source
 INCLUDES    := include
 OUTPUT      := output
 
-ARCH        := -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft
+ARCH        := -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 
 #---------------------------------------------------------------------------------
 # Source collection — must precede INCLUDE/CFLAGS because := evaluates immediately
