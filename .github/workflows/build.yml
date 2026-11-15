@@ -38,7 +38,13 @@ jobs:
         shell: bash
         run: |
           . /etc/profile.d/devkit-env.sh
-          make 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+          make 2>&1 | tee build.log; test ${PIPESTATUS[0]} -eq 0 || exit 1
+          # Nintendo's loader (rtld) cannot read packed RELR relocations.
+          aarch64-none-elf-readelf -d output/SwitchSMAPI_Bootstrap.elf | tee -a build.log
+          if aarch64-none-elf-readelf -d output/SwitchSMAPI_Bootstrap.elf | grep -q 'RELR'; then
+            echo "ERROR: module still uses DT_RELR relocations" | tee -a build.log
+            exit 1
+          fi
 
       - name: Upload build log
         if: failure()
