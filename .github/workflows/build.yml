@@ -30,7 +30,14 @@ jobs:
         shell: bash
         run: |
           . /etc/profile.d/devkit-env.sh
-          make -j$(nproc)
+          make 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+
+      - name: Upload build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-build-log
+          path: src/native/build.log
 
       - name: Upload NSO
         uses: actions/upload-artifact@v4
